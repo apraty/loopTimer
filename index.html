@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<div id="app">
+	<div>
+		Interval (ms): <input type="number" id="intervalInput" value="1400">
+	</div>
+	<div id="display"></div>
+	<div id="buttons">
+		<button onclick="start()">Start</button>
+		<button onclick="stop()">Stop</button>
+	</div>
+</div>
+ 
+<script>
+const state = {
+	startedOn: null,
+	stoppedOn: null,
+	interval: 1400
+};
+
+const start = () => {
+	state.interval = document.getElementById("intervalInput").value;
+	state.startedOn = new Date();
+	state.stoppedOn = null;
+}
+
+const stop = () => state.stoppedOn = new Date();
+
+const render = () => {
+	const display = document.getElementById('display');
+	if (state.startedOn) {
+		let elapsedMillis;
+		let beep = false;
+		if (!state.stoppedOn) {
+			elapsedMillis = (new Date() - state.startedOn) % state.interval;
+			if (elapsedMillis < 100) {
+				beep  = true;
+			}
+		} else {
+			elapsedMillis = (state.stoppedOn - state.startedOn) % state.interval;
+		}
+		display.innerHTML = new Date(elapsedMillis).toISOString().substr(11, 12);
+		display.style.backgroundColor = beep ? 'red' : 'white';
+	} else {
+		display.innerHTML = '';
+	}
+};
+
+setInterval(render, 10);
+</script> 
+
+</body>
+</html>
